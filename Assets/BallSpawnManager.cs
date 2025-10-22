@@ -8,13 +8,13 @@ public class BallSpawnManager : MonoBehaviour
     [SerializeField] private float minThrowInterval = 20f;
     [SerializeField] private float maxThrowInterval = 25f;
 
-    private List<BallThrower> throwers = new List<BallThrower>();
-    private List<GameObject> activeBalls = new List<GameObject>();
+    [SerializeField] private List<BallThrower> throwers = new List<BallThrower>();
+    [SerializeField] private List<GameObject> activeBalls = new List<GameObject>();
 
     private void Start()
     {
         // Find all BallThrowers in the scene
-        throwers.AddRange(FindObjectsOfType<BallThrower>());
+        //throwers.AddRange(FindObjectsOfType<BallThrower>());
 
         if (throwers.Count == 0)
         {
@@ -53,11 +53,15 @@ public class BallSpawnManager : MonoBehaviour
         if (ball != null)
         {
             activeBalls.Add(ball);
-            // Remove automatically when destroyed
-            BallLifeTracker tracker = ball.AddComponent<BallLifeTracker>();
-            tracker.Init(this);
+
+            Ball ballScript = ball.GetComponent<Ball>();
+            if (ballScript != null)
+            {
+                ballScript.SetSpawnManager(this); //  now the ball knows its manager
+            }
         }
     }
+
 
     public void RemoveBall(GameObject ball)
     {

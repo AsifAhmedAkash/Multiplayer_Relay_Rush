@@ -146,7 +146,7 @@ Transform:
   m_GameObject: {fileID: 2566089282743358360}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0.33}
   m_LocalScale: {x: 0.78, y: 0.41339993, z: 0.78000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -333,13 +333,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5897417892690229139}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -1.75}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.35, y: 0, z: -1.63}
   m_LocalScale: {x: 0.78, y: 0.41339993, z: 0.78000003}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4947718126778010519}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6057267052170630630
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,10 +508,8 @@ MonoBehaviour:
   throwPoint: {fileID: 2342577386283719287}
   target: {fileID: 5606475801550725319}
   ballMoveSpeed: 5
-  minThrowInterval: 1
-  maxThrowInterval: 4
   animator: {fileID: 5156245474838467429}
-  preThrowAnimationName: PreThrow
+  preThrowAnimationName: upcoming ball
   preThrowAnimDuration: 2
 --- !u!95 &5156245474838467429
 Animator:
