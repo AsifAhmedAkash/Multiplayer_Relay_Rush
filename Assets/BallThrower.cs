@@ -5,7 +5,7 @@ public class BallThrower : MonoBehaviour
 {
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private Transform throwPoint;
-    [SerializeField] private Transform target;
+    [SerializeField] private Transform[] targets; // Multiple targets
     [SerializeField] private float ballMoveSpeed = 5f;
 
     [Header("Animation")]
@@ -17,23 +17,35 @@ public class BallThrower : MonoBehaviour
 
     public IEnumerator ThrowWithAnimation(System.Action<GameObject> onBallSpawned)
     {
+        // Play pre-throw animation
         if (animator != null)
             animator.Play(preThrowAnimationName);
 
+        // Wait until animation finishes
         yield return new WaitForSeconds(preThrowAnimDuration);
 
+        // Spawn the ball
         GameObject ball = Instantiate(ballPrefab, throwPoint.position, Quaternion.identity);
 
-        // Each thrower gets its unique direction!
-        Vector3 direction = (target.position - throwPoint.position).normalized;
-
-        // Use Ball script
-        Ball ballScript = ball.GetComponent<Ball>();
-        if (ballScript != null)
+        // Pick a random target from the list
+        if (targets != null && targets.Length > 0)
         {
-            ballScript.SetInitialDirection(direction, ballMoveSpeed);
-        }
+            Transform randomTarget = targets[Random.Range(0, targets.Length)];
+            Vector3 direction = (randomTarget.position - throwPoint.position).normalized;
 
-        onBallSpawned?.Invoke(ball);
+            // Set direction & speed on the Ball script
+            Ball ballScript = ball.GetComponent<Ball>();
+            if (ballScript != null)
+            {
+                ballScript.SetInitialDirection(direction, ballMoveSpeed);
+            }
+
+            onBallSpawned?.Invoke(ball);
+        }
+        else
+        {
+            Debug.LogWarning($"{name} has no targets assigned!");
+            Destroy(ball); // Clean up unused ball
+        }
     }
 }

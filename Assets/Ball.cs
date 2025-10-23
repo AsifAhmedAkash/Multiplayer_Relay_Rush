@@ -57,7 +57,9 @@ public class Ball : MonoBehaviour
     {
         ContactPoint contact = collision.contacts[0];
         moveDirection = (transform.position - contact.point).normalized;
-
+        moveSpeed += 3f; // Increase speed on bounce
+        if(moveSpeed > 12f)
+            moveSpeed = 12f; // Cap max speed
         Debug.DrawRay(contact.point, contact.normal, Color.red, 1f);
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.green, 1f);
     }
