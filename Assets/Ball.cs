@@ -12,12 +12,16 @@ public class Ball : MonoBehaviour
     public float lifeTime = 15f;
     private BallSpawnManager spawnManager;
 
+    public PlayerEnum LastTouchedBy = PlayerEnum.None;
+    private float yStartPos;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         if (rb != null)
             rb.useGravity = false;
 
+        yStartPos = transform.position.y;
         // Start lifetime countdown
         StartCoroutine(LifeTimer());
     }
@@ -28,7 +32,8 @@ public class Ball : MonoBehaviour
         {
             // Keep current Y position fixed
             Vector3 newPos = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-            newPos.y = rb.position.y; // Don't change Y
+            newPos.y = yStartPos; // Don't change Y
+
             rb.MovePosition(newPos);
         }
     }
@@ -55,6 +60,7 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        
         ContactPoint contact = collision.contacts[0];
         moveDirection = (transform.position - contact.point).normalized;
         moveSpeed += 3f; // Increase speed on bounce
@@ -64,6 +70,7 @@ public class Ball : MonoBehaviour
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.green, 1f);
     }
 
+    
     private void OnDestroy()
     {
         if (spawnManager != null)

@@ -1,10 +1,17 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
 public class Indicator : MonoBehaviour
 {
+    [SerializeField] private int score = 0;
+
     [Header("Player Settings")]
     public PlayerEnum player; // assign in Inspector
+
+    [Header("UI Settings")]
+    [SerializeField] private TMP_Text scoreText; // assign a Text UI element in the Canvas
 
     [Header("Animation Settings")]
     [SerializeField] private string redLightAnimName = "RedLight"; // animation clip name
@@ -18,26 +25,39 @@ public class Indicator : MonoBehaviour
 
     private void Start()
     {
-        // Subscribe to the event
+        // Initialize UI
+        UpdateScoreUI();
+
+        // Subscribe to event
         if (GameManager.Instance != null)
             GameManager.Instance.OnRedLight += HandleRedLight;
     }
 
     private void OnDisable()
     {
-        // Unsubscribe to prevent memory leaks
         if (GameManager.Instance != null)
             GameManager.Instance.OnRedLight -= HandleRedLight;
     }
 
     public void HandleRedLight(PlayerEnum triggeredPlayer)
     {
+        Debug.Log("red light from indicator " + player.ToString());
 
-        Debug.Log("red light from indicator" + player.ToString());
-        // Only play animation if it's this indicator's player
+        // Only update this player's indicator
         if (triggeredPlayer == player)
         {
+            score++;
+            UpdateScoreUI();
             animator.Play(redLightAnimName);
+        }
+    }
+
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+        {
+            // Format: 000, 001, 023, 105, etc.
+            scoreText.text = score.ToString("D3");
         }
     }
 }
