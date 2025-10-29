@@ -12,6 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e7607f22d37a1243b2e414f88e73543, type: 3}
   m_Name: Sounds
   m_EditorClassIdentifier: 
-  ballHitPlayer: {fileID: 0}
-  ballHitNotPlayer: {fileID: 0}
-  scored: {fileID: 0}
+  sounds:
+  - name: ball
+    clip: {fileID: 8300000, guid: 09b57976321042e4d8a2e5ad474e456c, type: 3}
+    volume: 1
+    pitch: 1
+  - name: dead
+    clip: {fileID: 8300000, guid: 7a1d61b4350e4354b96173aaad6b74b3, type: 3}
+    volume: 1
+    pitch: 1
+  - name: menu
+    clip: {fileID: 8300000, guid: 23ecf2fb5ca221340bf36cf98c8f5fd9, type: 3}
+    volume: 1
+    pitch: 1
+  - name: win
+    clip: {fileID: 8300000, guid: 71593ddf6aa4c5449b3272f16c50fe9b, type: 3}
+    volume: 1
+    pitch: 1

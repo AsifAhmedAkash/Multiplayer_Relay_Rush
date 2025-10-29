@@ -12,12 +12,13 @@ public class Indicator : MonoBehaviour
 
     [Header("UI Settings")]
     [SerializeField] private TMP_Text scoreText; // assign a Text UI element in the Canvas
-
+    [SerializeField] private TMP_Text playerGlobalScoreTxt;
     [Header("Animation Settings")]
     [SerializeField] private string redLightAnimName = "RedLight"; // animation clip name
 
     private Animator animator;
-
+    [SerializeField] private Animator blockerAnim;
+    [SerializeField] private GameObject BotPlayerToDeactivate;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -33,6 +34,12 @@ public class Indicator : MonoBehaviour
             GameManager.Instance.OnRedLight += HandleRedLight;
     }
 
+    public void SetScore(int MaxScore)
+    {
+        score = MaxScore;
+        UpdateScoreUI();
+    }
+
     private void OnDisable()
     {
         if (GameManager.Instance != null)
@@ -46,9 +53,18 @@ public class Indicator : MonoBehaviour
         // Only update this player's indicator
         if (triggeredPlayer == player)
         {
-            score++;
+            score--;
+            if(score <= 0)
+            {
+                score = 0;
+                blockerAnim.Play("block");
+                GameManager.Instance.AnyPlayerDied(player);
+                BotPlayerToDeactivate.SetActive(false);
+            }
+                
             UpdateScoreUI();
-            animator.Play(redLightAnimName);
+            if(animator != null)
+                animator.Play(redLightAnimName);
         }
     }
 
@@ -58,6 +74,7 @@ public class Indicator : MonoBehaviour
         {
             // Format: 000, 001, 023, 105, etc.
             scoreText.text = score.ToString("D3");
+            playerGlobalScoreTxt.text = score.ToString("D3");
         }
     }
 }

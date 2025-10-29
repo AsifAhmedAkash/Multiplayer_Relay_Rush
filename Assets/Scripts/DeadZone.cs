@@ -9,6 +9,7 @@ public class DeadZone : MonoBehaviour
         Ball ball = other.GetComponent<Ball>();
         if (ball != null)
         {
+            SoundManager.Instance.PlayOneShot("dead");
             // Notify GameManager
             GameManager.Instance.AddScore(player);
 

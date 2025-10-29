@@ -1,79 +1,67 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
-    [Header("Sound Data Reference")]
-    [SerializeField] private SoundData soundData;
+    public SoundData soundLibrary;
+    private AudioSource audioSource;
 
-    [Header("Audio Settings")]
-    [SerializeField] private AudioSource audioSourcePrefab;
-    [SerializeField] private int poolSize = 5;
+    [Range(0f, 1f)] public float masterVolume = 1f;  // controlled by slider
+    [Range(0.1f, 3f)] public float masterPitch = 1f; // controlled by slider
+    public Slider volumeSlider;
+    public Slider pitchSlider;
 
-    private Queue<AudioSource> audioPool;
+    private void Start()
+    {
+        volumeSlider.value = SoundManager.Instance.masterVolume;
+        pitchSlider.value = SoundManager.Instance.masterPitch;
 
+        volumeSlider.onValueChanged.AddListener(SoundManager.Instance.SetVolume);
+        pitchSlider.onValueChanged.AddListener(SoundManager.Instance.SetPitch);
+    }
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
         DontDestroyOnLoad(gameObject);
+    }
 
-        // Create audio pool
-        audioPool = new Queue<AudioSource>();
-        for (int i = 0; i < poolSize; i++)
+    // Play a sound by name
+    public void PlayOneShot(string soundName)
+    {
+        var sound = System.Array.Find(soundLibrary.sounds, s => s.name == soundName);
+        if (sound != null && sound.clip != null)
         {
-            AudioSource src = Instantiate(audioSourcePrefab, transform);
-            src.playOnAwake = false;
-            audioPool.Enqueue(src);
+            audioSource.PlayOneShot(sound.clip, sound.volume);
+            audioSource.pitch = sound.pitch;
+        }
+        else
+        {
+            Debug.LogWarning("Sound not found: " + soundName);
         }
     }
 
-    private AudioSource GetPooledSource()
+    public void playMenuAudio()
     {
-        AudioSource src = audioPool.Dequeue();
-        audioPool.Enqueue(src);
-        return src;
+        SoundManager.Instance.PlayOneShot("menu");
     }
 
-    /// <summary>
-    /// Plays a sound by name (case-insensitive).
-    /// </summary>
-    public void PlaySound(string soundName)
+    public void SetVolume(float value)
     {
-        if (soundData == null)
-        {
-            Debug.LogWarning("SoundManager: No SoundData assigned!");
-            return;
-        }
-
-        AudioClip clip = GetClipByName(soundName);
-        if (clip == null)
-        {
-            Debug.LogWarning($"SoundManager: No clip found for '{soundName}'");
-            return;
-        }
-
-        AudioSource src = GetPooledSource();
-        src.PlayOneShot(clip);
+        masterVolume = value;
     }
 
-    private AudioClip GetClipByName(string soundName)
+    public void SetPitch(float value)
     {
-        string name = soundName.ToLower();
-
-        switch (name)
-        {
-            case "ballhitplayer": return soundData.ballHitPlayer;
-            case "ballhitnotplayer": return soundData.ballHitNotPlayer;
-            case "scored": return soundData.scored;
-            default: return null;
-        }
+        masterPitch = value;
     }
 }

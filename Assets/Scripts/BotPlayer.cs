@@ -25,6 +25,8 @@ public class BotPlayer : MonoBehaviour
     private float idleTimer;
     private float idleTargetAxisValue;
 
+    public PlayerEnum player; // assign in Inspector
+
     private void Start()
     {
         startPos = transform.position;
@@ -101,6 +103,8 @@ public class BotPlayer : MonoBehaviour
         yield return new WaitForSeconds(reactionDelay);
 
         bool willHit = Random.value <= accuracy;
+
+        moveSpeed = Mathf.Lerp(1f, 12f, accuracy); // adjust speed based on accuracy
 
         float desiredAxis = moveAxis == MovementAxis.X ? ballPos.x : ballPos.z;
 

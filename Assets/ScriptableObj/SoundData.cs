@@ -3,10 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Sounds", menuName = "Game/Sound Data")]
 public class SoundData : ScriptableObject
 {
-    [Header("Audio Clips")]
-    public AudioClip ballHitPlayer;
-    public AudioClip ballHitNotPlayer;
-    public AudioClip scored;
+    [System.Serializable]
+    public class Sound
+    {
+        public string name;
+        public AudioClip clip;
+        public float volume = 1f;  // optional default volume
+        public float pitch = 1f;   // optional default pitch
+    }
 
-    // Add more sounds here as needed
+    public Sound[] sounds;
 }
