@@ -32,7 +32,9 @@ Installation
 Clone the repository:
 
 bash
+```
 git clone https://github.com/AsifAhmedAkash/Multiplayer_Relay_Rush.git
+```
 Open the project in Unity Hub.
 
 Press Play in the Unity Editor to start the game.
